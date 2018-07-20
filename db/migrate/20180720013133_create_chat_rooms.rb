@@ -4,7 +4,7 @@ class CreateChatRooms < ActiveRecord::Migration
       t.string :title
       t.string :master_id
       t.integer :max_count
-      t.integer :admission_count, default: 0
+      t.integer :admissions_count, default: 0
 
       t.timestamps null: false
     end

@@ -27,9 +27,9 @@ ActiveRecord::Schema.define(version: 20180720013148) do
     t.string   "title"
     t.string   "master_id"
     t.integer  "max_count"
-    t.integer  "admission_count", default: 0
-    t.datetime "created_at",                  null: false
-    t.datetime "updated_at",                  null: false
+    t.integer  "admissions_count", default: 0
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
   end
 
   create_table "chats", force: :cascade do |t|
