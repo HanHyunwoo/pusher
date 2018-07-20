@@ -15,7 +15,7 @@
 <hr />
 <p class="user-list"><strong>참여 인원</strong></p>
 <% @chat_room.users.each do |user| %>
-  <p><%= user.email %></p>
+  <p id="user-<%=user.id%>"><%= user.email %></p>
 <% end %>
 <hr />
 
@@ -31,7 +31,15 @@
   <% end %>
 <% end %>
 
+<% unless current_user.join_room? @chat_room %>
 <%= link_to '참가하기', join_chat_room_path(@chat_room), remote: true, method: 'post'%>
+<% else %>
+<%= link_to '나가기',
+    exit_chat_room_path(@chat_room),
+    remote: true,
+    method: 'delete',
+    data: {confirm: '방 나갈거니?'} %>
+<% end %>
 <%= link_to 'Edit', edit_chat_room_path(@chat_room) %> |
 <%= link_to 'Back', chat_rooms_path %>
 
@@ -41,11 +49,17 @@ $(document).on('ready', function(){
   function user_join(data) {
     $('.user-list').append(`<p>${data.email}</p>`)
   }
-
   function user_chat(data) {
     $('.chat-list').append(`<p>${data.email} : ${data.message}</p>`)
   }
-
+  function user_exit(data) {
+    $('.chat-list').append(`<p>${data.email}님이 나가셨습니다.</p>`);
+    $(`#user-${data.user_id}`).remove();
+  }
+  function room_destroy(data) {
+    alert('방이 삭제되었습니다. 홈으로 이동합니다.');
+    location.href = "/";
+  }
   var pusher = new Pusher("<%=ENV["pusher_key"]%>", {
   cluster: '<%=ENV["pusher_cluster"]%>',
   encrypted: true
@@ -65,5 +79,12 @@ $(document).on('ready', function(){
     user_chat(data);
   });
 
+  channel.bind('exit', function(data) {
+    user_exit(data);
+  });
+
+  channel.bind('destroy', function(data) {
+    room_destroy(data);
+  });
 });
 </script>

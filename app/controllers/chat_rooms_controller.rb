@@ -1,5 +1,5 @@
 class ChatRoomsController < ApplicationController
-  before_action :set_chat_room, only: [:show, :edit, :update, :destroy, :join, :chat]
+  before_action :set_chat_room, only: [:show, :edit, :update, :destroy, :join, :chat, :exit]
 
   # GET /chat_rooms
   # GET /chat_rooms.json
@@ -73,6 +73,15 @@ class ChatRoomsController < ApplicationController
   def chat
     # @chat_room -> chat
     @chat_room.chats.create(user_id: current_user.id, message: params[:message])
+  end
+
+  def exit
+    if current_user.email == @chat_room.master_id
+      @chat_room.destroy
+    else
+      admission = Admission.find_by(user_id: current_user.id, chat_room_id: @chat_room.id)
+      admission.destroy
+    end
   end
 
   private

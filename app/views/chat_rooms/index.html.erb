@@ -41,12 +41,19 @@ $(document).on('ready', function(){
 
   var channel = pusher.subscribe('chat_room');
   channel.bind('create', function(data) {
-  console.log("방이 만들어졌냐?");
-  room_created(data);
+    // 방 리스트에 추가(append)
   });
 
   channel.bind('join', function(data) {
-  console.log("유저가 참가했냐?");
+    // 인원 +
+  });
+
+  channel.bind('exit', function(data) {
+    // 인원 -
+  });
+
+  channel.bind('destroy', function(data) {
+    // 방 리스트에서 삭제(remove)
   });
 });
 </script>
