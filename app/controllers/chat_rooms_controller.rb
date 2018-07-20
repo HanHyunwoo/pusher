@@ -62,6 +62,12 @@ class ChatRoomsController < ApplicationController
     end
   end
 
+  def join
+    unless current_user.join_room?(@chat_room)
+      Admission.create(user_id: current_user.id, chat_room_id: params[:id])
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_chat_room
@@ -70,6 +76,6 @@ class ChatRoomsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def chat_room_params
-      params.require(:chat_room).permit(:title, :master_id, :max_count, :admission_count)
+      params.fetch(:chat_room, {}).permit(:title, :master_id, :max_count, :admission_count)
     end
 end

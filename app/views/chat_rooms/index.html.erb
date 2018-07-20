@@ -32,6 +32,8 @@
 <%= link_to 'New Chat room', new_chat_room_path %>
 
 <script>
+$(document).on('ready', function(){
+
   var pusher = new Pusher("<%=ENV["pusher_key"]%>", {
   cluster: '<%=ENV["pusher_cluster"]%>',
   encrypted: true
@@ -40,9 +42,11 @@
   var channel = pusher.subscribe('chat_room');
   channel.bind('create', function(data) {
   console.log("방이 만들어졌냐?");
+  room_created(data);
   });
-  
+
   channel.bind('join', function(data) {
   console.log("유저가 참가했냐?");
   });
+});
 </script>

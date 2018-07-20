@@ -8,4 +8,9 @@ class User < ActiveRecord::Base
   # 채팅방이랑 M:N
   has_many :admissions
   has_many :chat_rooms, through: :admissions
+
+  def join_room?(chatroom)
+    # Admission.where(user_id: self.id, chat_room_id: chatroom.id)
+    self.chat_rooms.include?(chatroom)
+  end
 end

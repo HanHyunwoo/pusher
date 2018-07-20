@@ -1,24 +1,48 @@
 <p id="notice"><%= notice %></p>
 
 <p>
-  <strong>Title:</strong>
+  <strong>방제:</strong>
   <%= @chat_room.title %>
 </p>
-
 <p>
-  <strong>Master:</strong>
+  <strong>방장:</strong>
   <%= @chat_room.master_id %>
 </p>
-
 <p>
-  <strong>Max count:</strong>
-  <%= @chat_room.max_count %>
+  <strong>인원</strong>
+  <%= @chat_room.admissions_count %>/<%= @chat_room.max_count %>
 </p>
+<hr />
+<p class="user-list"><strong>참여 인원</strong></p>
+<% @chat_room.users.each do |user| %>
+  <p><%= user.email %></p>
+<% end %>
+<hr />
 
-<p>
-  <strong>Admission count:</strong>
-  <%= @chat_room.admissions_count %>
-</p>
-
+<%= link_to '참가하기', join_chat_room_path(@chat_room), remote: true, method: 'post'%>
 <%= link_to 'Edit', edit_chat_room_path(@chat_room) %> |
 <%= link_to 'Back', chat_rooms_path %>
+
+
+<script>
+$(document).on('ready', function(){
+  function user_join(data) {
+    $('.user-list').append(`<p>${data.email}</p>`)
+  }
+
+  var pusher = new Pusher("<%=ENV["pusher_key"]%>", {
+  cluster: '<%=ENV["pusher_cluster"]%>',
+  encrypted: true
+  });
+
+  var channel = pusher.subscribe('chat_room_<%=@chat_room.id%>');
+  channel.bind('create', function(data) {
+  console.log("방이 만들어졌냐?");
+  });
+
+  channel.bind('join', function(data) {
+    // 지금 들어온 유저를 유저 참여 목록에 추가한다.
+    user_join(data);
+  });
+});
+</script>

@@ -6,5 +6,8 @@ class Admission < ActiveRecord::Base
 
   def join_chat_room_notification
     Pusher.trigger('chat_room', 'join', self.as_json)
+    Pusher.trigger("chat_room_#{self.chat_room_id}",
+      'join',
+      self.as_json.merge({email: self.user.email}))
   end
 end
