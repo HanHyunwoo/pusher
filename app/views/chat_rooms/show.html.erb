@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Title:</strong>
+  <%= @chat_room.title %>
+</p>
+
+<p>
+  <strong>Master:</strong>
+  <%= @chat_room.master_id %>
+</p>
+
+<p>
+  <strong>Max count:</strong>
+  <%= @chat_room.max_count %>
+</p>
+
+<p>
+  <strong>Admission count:</strong>
+  <%= @chat_room.admission_count %>
+</p>
+
+<%= link_to 'Edit', edit_chat_room_path(@chat_room) %> |
+<%= link_to 'Back', chat_rooms_path %>

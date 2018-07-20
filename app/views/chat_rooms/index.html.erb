@@ -1,0 +1,33 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Listing Chat Rooms</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Master</th>
+      <th>Max count</th>
+      <th>Admission count</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @chat_rooms.each do |chat_room| %>
+      <tr>
+        <td><%= chat_room.title %></td>
+        <td><%= chat_room.master_id %></td>
+        <td><%= chat_room.max_count %></td>
+        <td><%= chat_room.admission_count %></td>
+        <td><%= link_to 'Show', chat_room %></td>
+        <td><%= link_to 'Edit', edit_chat_room_path(chat_room) %></td>
+        <td><%= link_to 'Destroy', chat_room, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Chat room', new_chat_room_path %>
