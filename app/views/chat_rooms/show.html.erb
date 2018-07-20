@@ -19,6 +19,18 @@
 <% end %>
 <hr />
 
+<% if current_user.join_room? @chat_room %>
+  <div class="chat-list">
+    <% @chat_room.chats.each do |chat| %>
+    <p><%= chat.user.email %> : <%= chat.message %></p>
+    <% end %>
+  </div>
+  <hr />
+  <%= form_tag(chat_chat_room_path(@chat_room), remote: true) do %>
+    <%= text_field_tag :message %>
+  <% end %>
+<% end %>
+
 <%= link_to '참가하기', join_chat_room_path(@chat_room), remote: true, method: 'post'%>
 <%= link_to 'Edit', edit_chat_room_path(@chat_room) %> |
 <%= link_to 'Back', chat_rooms_path %>
@@ -28,6 +40,10 @@
 $(document).on('ready', function(){
   function user_join(data) {
     $('.user-list').append(`<p>${data.email}</p>`)
+  }
+
+  function user_chat(data) {
+    $('.chat-list').append(`<p>${data.email} : ${data.message}</p>`)
   }
 
   var pusher = new Pusher("<%=ENV["pusher_key"]%>", {
@@ -44,5 +60,10 @@ $(document).on('ready', function(){
     // 지금 들어온 유저를 유저 참여 목록에 추가한다.
     user_join(data);
   });
+
+  channel.bind('chat', function(data) {
+    user_chat(data);
+  });
+
 });
 </script>

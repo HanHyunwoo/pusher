@@ -1,5 +1,5 @@
 class ChatRoomsController < ApplicationController
-  before_action :set_chat_room, only: [:show, :edit, :update, :destroy]
+  before_action :set_chat_room, only: [:show, :edit, :update, :destroy, :join, :chat]
 
   # GET /chat_rooms
   # GET /chat_rooms.json
@@ -65,7 +65,14 @@ class ChatRoomsController < ApplicationController
   def join
     unless current_user.join_room?(@chat_room)
       Admission.create(user_id: current_user.id, chat_room_id: params[:id])
+    else
+      render js: "alert('이미 참여한 방입니다.')"
     end
+  end
+
+  def chat
+    # @chat_room -> chat
+    @chat_room.chats.create(user_id: current_user.id, message: params[:message])
   end
 
   private
