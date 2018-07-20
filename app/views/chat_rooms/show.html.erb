@@ -10,7 +10,7 @@
 </p>
 <p>
   <strong>인원</strong>
-  <%= @chat_room.admissions_count %>/<%= @chat_room.max_count %>
+  <span class="count"><%= @chat_room.admissions_count %>/<%= @chat_room.max_count %></span>
 </p>
 <hr />
 <p class="user-list"><strong>참여 인원</strong></p>
@@ -47,13 +47,15 @@
 <script>
 $(document).on('ready', function(){
   function user_join(data) {
-    $('.user-list').append(`<p>${data.email}</p>`)
+    $('.user-list').append(`<p>${data.email}</p>`);
+    $('.count').text(`${data.chat_room.admissions_count}/${data.chat_room.max_count}`);
   }
   function user_chat(data) {
     $('.chat-list').append(`<p>${data.email} : ${data.message}</p>`)
   }
   function user_exit(data) {
     $('.chat-list').append(`<p>${data.email}님이 나가셨습니다.</p>`);
+    $('.count').text(`${data.chat_room.admissions_count}/${data.chat_room.max_count}`);
     $(`#user-${data.user_id}`).remove();
   }
   function room_destroy(data) {
