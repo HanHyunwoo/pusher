@@ -20,8 +20,6 @@
         <td><%= chat_room.master_id %></td>
         <td><%= chat_room.admissions_count %>/<%= chat_room.max_count %></td>
         <td><%= link_to 'Show', chat_room %></td>
-        <td><%= link_to 'Edit', edit_chat_room_path(chat_room) %></td>
-        <td><%= link_to 'Destroy', chat_room, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
   </tbody>
@@ -33,7 +31,14 @@
 
 <script>
 $(document).on('ready', function(){
-
+  function room_create(data){
+    $('.chat_room_list').append(`<tr>
+      <td>${data.title}</td>
+      <td>${data.master_id}</td>
+      <td>${data.admissions_count}/${data.max_count}</td>
+      <td><a href="/chat_rooms/${data.id}">Show</a></td>
+    </tr>`);
+  }
   var pusher = new Pusher("<%=ENV["pusher_key"]%>", {
   cluster: '<%=ENV["pusher_cluster"]%>',
   encrypted: true
@@ -42,6 +47,7 @@ $(document).on('ready', function(){
   var channel = pusher.subscribe('chat_room');
   channel.bind('create', function(data) {
     // 방 리스트에 추가(append)
+    room_create(data);
   });
 
   channel.bind('join', function(data) {
